@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>first_proced_show</class>
+ <widget class="QDialog" name="first_proced_show">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>754</width>
+    <height>204</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle">
+   <string>GetTotalCostByContractNumber</string>
+  </property>
+  <widget class="QTableWidget" name="tableWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>931</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="editTriggers">
+    <set>QAbstractItemView::NoEditTriggers</set>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::ExtendedSelection</enum>
+   </property>
+   <property name="textElideMode">
+    <enum>Qt::ElideRight</enum>
+   </property>
+   <property name="verticalScrollMode">
+    <enum>QAbstractItemView::ScrollPerPixel</enum>
+   </property>
+   <property name="columnCount">
+    <number>3</number>
+   </property>
+   <attribute name="horizontalHeaderCascadingSectionResizes">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>true</bool>
+   </attribute>
+   <attribute name="verticalHeaderCascadingSectionResizes">
+    <bool>false</bool>
+   </attribute>
+   <column>
+    <property name="text">
+     <string>product</string>
+    </property>
+    <property name="font">
+     <font>
+      <stylestrategy>PreferDefault</stylestrategy>
+     </font>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>amount</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>price</string>
+    </property>
+   </column>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

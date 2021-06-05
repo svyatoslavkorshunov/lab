@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>320</width>
-    <height>215</height>
+    <width>457</width>
+    <height>226</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="tab_5">
      <attribute name="title">
@@ -158,6 +158,68 @@
       </property>
      </widget>
     </widget>
+    <widget class="QWidget" name="tab_2">
+     <attribute name="title">
+      <string>legal_supplier</string>
+     </attribute>
+     <widget class="QPushButton" name="pushButton_legal_insert">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>121</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Insert or Update</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_legal_delete">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_3">
+     <attribute name="title">
+      <string>private_supplier</string>
+     </attribute>
+     <widget class="QPushButton" name="pushButton_private_insert">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>121</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Insert or Update</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton_private_delete">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>50</y>
+        <width>93</width>
+        <height>28</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Delete</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -165,7 +227,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>320</width>
+     <width>457</width>
      <height>26</height>
     </rect>
    </property>
@@ -176,7 +238,14 @@
     <addaction name="open_login_screen"/>
     <addaction name="show_db"/>
    </widget>
+   <widget class="QMenu" name="menuProcedures">
+    <property name="title">
+     <string>Procedures</string>
+    </property>
+    <addaction name="open_procedure_1"/>
+   </widget>
    <addaction name="menuLogin"/>
+   <addaction name="menuProcedures"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="open_login_screen">
@@ -187,6 +256,11 @@
   <action name="show_db">
    <property name="text">
     <string>Show DB</string>
+   </property>
+  </action>
+  <action name="open_procedure_1">
+   <property name="text">
+    <string>GetTotalCostByContractNumber</string>
    </property>
   </action>
  </widget>

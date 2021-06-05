@@ -13,6 +13,12 @@ from contract_delete import Ui_contract_delete
 from supplier_delete import Ui_supplier_delete
 from product_delete import Ui_product_delete
 from tables import Ui_ShowDB
+from first_proced import Ui_first_proced
+from first_proced_show import Ui_first_proced_show
+from legal_insert import Ui_legal_insert
+from private_insert import Ui_private_insert
+from legal_delete import Ui_legal_delete
+from private_delete import Ui_private_delete
 import sys
 from PyQt5.QtWidgets import QTableWidgetItem
 import mysql.connector
@@ -63,7 +69,32 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.pushButton_supplier_delete.clicked.connect(self.supplier_delete_clicked)
         self.ui.pushButton_product_delete.clicked.connect(self.product_delete_clicked)
         self.ui.show_db.triggered.connect(self.show_db)
+        self.ui.open_procedure_1.triggered.connect(self.proced_1)
+        self.ui.pushButton_legal_insert.clicked.connect(self.legal_insert_clicked)
+        self.ui.pushButton_private_insert.clicked.connect(self.private_insert_clicked)
+        self.ui.pushButton_legal_delete.clicked.connect(self.legal_delete_clicked)
+        self.ui.pushButton_private_delete.clicked.connect(self.private_delete_clicked)
 
+
+    def legal_insert_clicked(self):
+        self.w2 = legal_insert_window()
+        self.w2.exec()
+
+    def private_insert_clicked(self):
+        self.w2 = private_insert_window()
+        self.w2.exec()
+
+    def legal_delete_clicked(self):
+        self.w2 = legal_delete_window()
+        self.w2.exec()
+
+    def private_delete_clicked(self):
+        self.w2 = private_delete_window()
+        self.w2.exec()
+
+    def proced_1(self):
+        self.w2 = show_first_procedure()
+        self.w2.exec()
 
     def show_db(self):
         self.w2 = show_window()
@@ -153,6 +184,76 @@ class show_window(QtWidgets.QDialog):
                 self.ui.tableWidget_3.setItem(i, j, a)
 
         application.connection.commit()
+
+        cursor = application.connection.cursor()
+        select_legal = None
+        cursor.execute("SELECT * FROM legal_supplier")
+        select_legal = cursor.fetchall()
+
+        for i in range(0, len(select_legal)):
+            self.ui.tableWidget_4.setRowCount(self.ui.tableWidget_4.rowCount() + 1)
+            for j in range(0, 3):
+                a = QTableWidgetItem(str(select_legal[i][j]))
+                self.ui.tableWidget_4.setItem(i, j, a)
+
+        application.connection.commit()
+
+        cursor = application.connection.cursor()
+        select_private = None
+        cursor.execute("SELECT * FROM private_supplier")
+        select_private = cursor.fetchall()
+
+        for i in range(0, len(select_private)):
+            self.ui.tableWidget_5.setRowCount(self.ui.tableWidget_5.rowCount() + 1)
+            for j in range(0, 5):
+                a = QTableWidgetItem(str(select_private[i][j]))
+                self.ui.tableWidget_5.setItem(i, j, a)
+
+        application.connection.commit()
+
+
+class show_first_procedure(QtWidgets.QDialog):
+
+    def __init__(self):
+        super(show_first_procedure, self).__init__()
+        self.ui = Ui_first_proced()
+        self.ui.setupUi(self)
+        self.ui.pushButton_create_report.clicked.connect(self.btnCreate)
+
+    def btnCreate(self):
+        global b
+        b = self.ui.lineEdit.text()
+        self.w2 = show_first_procedure_2()
+        self.w2.exec()
+
+class show_first_procedure_2(QtWidgets.QDialog):
+    def __init__(self):
+        super(show_first_procedure_2, self).__init__()
+        self.ui = Ui_first_proced_show()
+        self.ui.setupUi(self)
+        try:
+            cursor = application.connection.cursor()
+            global b
+
+            a = [int(b)]
+            report_result = None
+            cursor.callproc('GetListOfSuppliedProductsByNumber', a)
+
+            for result in cursor.stored_results():
+                report_result = result.fetchall()
+
+            print(report_result)
+
+            for i in range(0, len(report_result)):
+                self.ui.tableWidget.setRowCount(self.ui.tableWidget.rowCount() + 1)
+                for j in range(0, 3):
+                    a = QTableWidgetItem(str(report_result[i][j]))
+                    self.ui.tableWidget.setItem(i, j, a)
+
+            application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
 
 
 class supplier_insert_window(QtWidgets.QDialog):
@@ -311,8 +412,8 @@ class supplier_delete_window(QtWidgets.QDialog):
             print(id)
 
             with application.connection.cursor() as cursor:
-                kor1 = (int(id), int(id))
-                cursor.execute("DELETE FROM supplier WHERE id = %s; DELETE FROM contract WHERE supplier = %s;", kor1)
+                kor1 = (int(id),)
+                cursor.execute("DELETE FROM supplier WHERE id = %s", kor1)
                 application.connection.commit()
         except:
             self.w2 = error_box()
@@ -333,8 +434,8 @@ class contract_delete_window(QtWidgets.QDialog):
 
             cursor = application.connection.cursor()
 
-            kor1 = (int(number), int(number))
-            cursor.execute("DELETE FROM product WHERE contract = %s; DELETE FROM contract WHERE number = %s;", kor1)
+            kor1 = (int(number),)
+            cursor.execute("DELETE FROM contract WHERE number = %s", kor1)
             application.connection.commit()
 
 
@@ -356,7 +457,7 @@ class product_delete_window(QtWidgets.QDialog):
             id = self.ui.lineEdit_product.text()
 
             with application.connection.cursor() as cursor:
-                kor1 = (id)
+                kor1 = (id,)
                 cursor.execute("DELETE FROM product WHERE product.product = %s", kor1)
                 application.connection.commit()
         except:
@@ -396,8 +497,140 @@ class login_window(QtWidgets.QDialog):
             self.w2 = error_box()
             self.w2.exec()
 
+class legal_insert_window(QtWidgets.QDialog):
+    def __init__(self):
+        super(legal_insert_window, self).__init__()
+        self.ui = Ui_legal_insert()
+        self.ui.setupUi(self)
+        self.ui.pushButton_legal_insert.clicked.connect(self.btnInsert_insert)
+        self.ui.pushButton_legal_update.clicked.connect(self.btnInsert_update)
+
+    def btnInsert_insert(self):
+        try:
+            id = self.ui.lineEdit_legal_id.text()
+            tax = self.ui.lineEdit_legal_tax.text()
+            vat = self.ui.lineEdit_legal_vat.text()
+
+            with application.connection.cursor() as cursor:
+                kor1 = (int(id), tax, vat)
+                cursor.execute("INSERT INTO legal_supplier VALUES (%s,%s,%s)", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+    def btnInsert_update(self):
+        try:
+            id = self.ui.lineEdit_legal_id.text()
+            tax = self.ui.lineEdit_legal_tax.text()
+            vat = self.ui.lineEdit_legal_vat.text()
+
+            with application.connection.cursor() as cursor:
+                kor1 = (tax, vat, int(id))
+                cursor.execute("UPDATE legal_supplier SET tax_number = %s, vat_number = %s WHERE id = %s", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+class private_insert_window(QtWidgets.QDialog):
+    def __init__(self):
+        super(private_insert_window, self).__init__()
+        self.ui = Ui_private_insert()
+        self.ui.setupUi(self)
+        self.ui.pushButton_private_insert.clicked.connect(self.btnInsert_insert)
+        self.ui.pushButton_private_update.clicked.connect(self.btnInsert_update)
+
+    def btnInsert_insert(self):
+        try:
+            id = self.ui.lineEdit_private_id.text()
+            last = self.ui.lineEdit_private_last.text()
+            first = self.ui.lineEdit_private_first.text()
+            second = self.ui.lineEdit_private_second.text()
+            number = self.ui.lineEdit_private_number.text()
+
+            with application.connection.cursor() as cursor:
+                kor1 = (int(id), last, first, second, number)
+                cursor.execute("INSERT INTO private_supplier VALUES (%s,%s,%s,%s,%s)", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+    def btnInsert_update(self):
+        try:
+            id = self.ui.lineEdit_private_id.text()
+            last = self.ui.lineEdit_private_last.text()
+            first = self.ui.lineEdit_private_first.text()
+            second = self.ui.lineEdit_private_second.text()
+            number = self.ui.lineEdit_private_number.text()
+
+            with application.connection.cursor() as cursor:
+                kor1 = (last, first, second, number, int(id))
+                cursor.execute("UPDATE private_supplier SET last_name = %s, first_name = %s, second_name = %s, reg_number = %s WHERE id = %s", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+class legal_delete_window(QtWidgets.QDialog):
+    def __init__(self):
+        super(legal_delete_window, self).__init__()
+        self.ui = Ui_legal_delete()
+        self.ui.setupUi(self)
+        self.ui.pushButton_legal_delete.clicked.connect(self.btnInsert)
+    def btnInsert(self):
+        try:
+            id = self.ui.lineEdit_legal.text()
+            print(id)
+
+            with application.connection.cursor() as cursor:
+                kor1 = (int(id),)
+                cursor.execute("DELETE FROM legal_supplier WHERE id = %s", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+class private_delete_window(QtWidgets.QDialog):
+    def __init__(self):
+        super(private_delete_window, self).__init__()
+        self.ui = Ui_private_delete()
+        self.ui.setupUi(self)
+        self.ui.pushButton_private_delete.clicked.connect(self.btnInsert)
+    def btnInsert(self):
+        try:
+            id = self.ui.lineEdit_private.text()
+            print(id)
+
+            with application.connection.cursor() as cursor:
+                kor1 = (int(id),)
+                cursor.execute("DELETE FROM private_supplier WHERE id = %s", kor1)
+                application.connection.commit()
+        except:
+            self.w2 = error_box()
+            self.w2.exec()
+        else:
+            self.w2 = message_box()
+            self.w2.exec()
+
+global b
 app = QtWidgets.QApplication([])
 application = mywindow()
 application.show()
-
 sys.exit(app.exec())
