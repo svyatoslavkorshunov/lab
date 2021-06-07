@@ -510,11 +510,16 @@ class legal_insert_window(QtWidgets.QDialog):
             id = self.ui.lineEdit_legal_id.text()
             tax = self.ui.lineEdit_legal_tax.text()
             vat = self.ui.lineEdit_legal_vat.text()
+            if (tax.isdigit() and vat.isdigit()):
+                with application.connection.cursor() as cursor:
+                    vat = "UA" + vat
+                    kor1 = (int(id), tax, vat)
+                    cursor.execute("INSERT INTO legal_supplier VALUES (%s,%s,%s)", kor1)
+                    application.connection.commit()
 
-            with application.connection.cursor() as cursor:
-                kor1 = (int(id), tax, vat)
-                cursor.execute("INSERT INTO legal_supplier VALUES (%s,%s,%s)", kor1)
-                application.connection.commit()
+            else:
+                raise Exception("Some exception")
+
         except:
             self.w2 = error_box()
             self.w2.exec()
@@ -528,10 +533,17 @@ class legal_insert_window(QtWidgets.QDialog):
             tax = self.ui.lineEdit_legal_tax.text()
             vat = self.ui.lineEdit_legal_vat.text()
 
-            with application.connection.cursor() as cursor:
-                kor1 = (tax, vat, int(id))
-                cursor.execute("UPDATE legal_supplier SET tax_number = %s, vat_number = %s WHERE id = %s", kor1)
-                application.connection.commit()
+
+            if (tax.isdigit() and vat.isdigit()):
+                with application.connection.cursor() as cursor:
+                    vat = "UA"+vat
+                    kor1 = (tax, vat, int(id))
+                    cursor.execute("UPDATE legal_supplier SET tax_number = %s, vat_number = %s WHERE id = %s", kor1)
+                    application.connection.commit()
+
+            else:
+                raise Exception("Some exception")
+
         except:
             self.w2 = error_box()
             self.w2.exec()

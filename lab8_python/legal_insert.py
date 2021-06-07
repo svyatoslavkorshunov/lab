@@ -39,6 +39,9 @@ class Ui_legal_insert(object):
         self.pushButton_legal_update = QtWidgets.QPushButton(legal_insert)
         self.pushButton_legal_update.setGeometry(QtCore.QRect(150, 100, 93, 28))
         self.pushButton_legal_update.setObjectName("pushButton_legal_update")
+        self.label_4 = QtWidgets.QLabel(legal_insert)
+        self.label_4.setGeometry(QtCore.QRect(140, 70, 21, 16))
+        self.label_4.setObjectName("label_4")
 
         self.retranslateUi(legal_insert)
         QtCore.QMetaObject.connectSlotsByName(legal_insert)
@@ -51,3 +54,4 @@ class Ui_legal_insert(object):
         self.label_3.setText(_translate("legal_insert", "Enter vat number:"))
         self.pushButton_legal_insert.setText(_translate("legal_insert", "Insert"))
         self.pushButton_legal_update.setText(_translate("legal_insert", "Update"))
+        self.label_4.setText(_translate("legal_insert", "UA"))
